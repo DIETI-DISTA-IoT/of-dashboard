@@ -46,7 +46,7 @@ RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard /app
 WORKDIR /app
 
 # Also add the OpenFAIR package to PYTHONPATH by copying the project root
-RUN ls && git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
+RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # Copy the config directory for hydra
 COPY config/ /config/
 ENV PYTHONPATH=/

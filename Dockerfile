@@ -48,8 +48,8 @@ WORKDIR /app
 # Also add the OpenFAIR package to PYTHONPATH by copying the project root
 RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # Copy the config directory for hydra
-COPY config/ /config/
-ENV PYTHONPATH=/
+COPY config/ config/
+# ENV PYTHONPATH=/
 
 # Install the dependencies specified in the requirements file
 # The requirements file should list all Python packages needed for the Flask app and Kafka consumer.

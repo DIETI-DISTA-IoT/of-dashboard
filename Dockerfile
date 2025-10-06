@@ -34,19 +34,21 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /
 RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 RUN apt-get update && apt-get install -y docker-ce-cli && rm -rf /var/lib/apt/lists/*
 
-# Copy all project files into the working directory of the container
-# This includes Python scripts, Flask configuration, and any additional resources needed by the application.
-# Copy only the dashboard code into its workdir
-COPY dashboard/ .
-# Also add the OpenFAIR package to PYTHONPATH by copying the project root
-COPY OpenFAIR/ /OpenFAIR/
-# Copy the config directory for hydra
-COPY config/ /config/
-ENV PYTHONPATH=/
-
 # Upgrade pip to the latest version
 # Ensures that the latest packages and features are available.
 RUN pip install --no-cache-dir --upgrade pip
+
+ARG CACHE_BUST=1
+
+# Copy all project files into the working directory of the container
+# This includes Python scripts, Flask configuration, and any additional resources needed by the application.
+# Copy only the dashboard code into its workdir
+RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard
+# Also add the OpenFAIR package to PYTHONPATH by copying the project root
+RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR
+# Copy the config directory for hydra
+COPY config/ /config/
+ENV PYTHONPATH=/
 
 # Install the dependencies specified in the requirements file
 # The requirements file should list all Python packages needed for the Flask app and Kafka consumer.

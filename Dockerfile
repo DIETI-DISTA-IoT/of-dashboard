@@ -2,9 +2,6 @@
 # Alpine is chosen for its lightweight nature, which reduces the overall image size.
 FROM python:3.10-slim
 
-# Set the working directory inside the container
-# All subsequent commands and operations will be executed in this directory.
-WORKDIR /flask_app_kafka_consumer
 
 # Set environment variables for Flask
 # FLASK_APP: Specifies the main application file to run when Flask starts.
@@ -44,9 +41,12 @@ ARG CACHE_BUST=1
 # Copy all project files into the working directory of the container
 # This includes Python scripts, Flask configuration, and any additional resources needed by the application.
 # Copy only the dashboard code into its workdir
-RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard
+RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard /app
+
+WORKDIR /app
+
 # Also add the OpenFAIR package to PYTHONPATH by copying the project root
-RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR
+RUN ls && git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # Copy the config directory for hydra
 COPY config/ /config/
 ENV PYTHONPATH=/

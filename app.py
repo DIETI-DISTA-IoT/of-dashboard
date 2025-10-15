@@ -213,7 +213,7 @@ def create_app(cfg: DictConfig) -> None:
         fronend_sm_config = config_from_frontend['security_manager']
         sm_config = OmegaConf.to_container(OmegaConf.merge(init_sm_config, fronend_sm_config))
         sm_config['dashboard_endpoint'] = container_manager.containers_ips['dashboard']+":"+str(init_config['dashboard']['port'])
-        manager_ip = container_manager.containers_ips['security-manager']
+        manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
         return requests.post(
                         url, 
@@ -225,7 +225,15 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/stop-security-manager', methods=['POST'])
     def stop_security_manager():
-        return container_manager.stop_security_manager()
+        manager_ip = container_manager.containers_ips['wandber']
+        url = f'http://{manager_ip}:5000/command'
+        return requests.post(
+                        url, 
+                        json={
+                            "command": "stop_security_manager",
+                            "params": {}
+                            }
+                    )
 
 
     @app.route('/create-vehicles', methods=['POST'])

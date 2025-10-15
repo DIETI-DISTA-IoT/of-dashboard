@@ -160,7 +160,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
   });
 
   startSecurityManagerButton.addEventListener("click", function() {
-      fetch("/start-security-manager", {method: "POST"})
+      fetch("/start-security-manager", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config)
+      })
         .then(response => response.text())
         .then(data => console.log(data));
   });

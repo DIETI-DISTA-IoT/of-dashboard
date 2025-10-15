@@ -100,6 +100,17 @@
                         
                     </details>
 
+                    <details>
+                        <summary>Security Manager</summary>
+                        <label>Buffer Size: <input type="text" name="security_manager.buffer_size" value="10000"></label>
+                        <label>Batch Size: <input type="text" name="security_manager.batch_size" value="32"></label>
+                        <label>Learning Rate: <input type="text" name="security_manager.learning_rate" value="0.001"></label>
+                        <label>Epoch Size: <input type="text" name="security_manager.epoch_size" value="50"></label>
+                        <label>Save model frequency (in epochs): <input type="text" name="security_manager.save_model_freq_epochs" value="5"></label>
+                        <label>Model Saving Path: <input type="text" name="security_manager.model_saving_path" value="sm_model.pth"></label></label>
+                        <label>Training Frequency (in seconds): <input type="text" name="security_manager.training_freq_seconds" value="10"></label>
+                        <label>Initialisation Strategy: <input type="text" name="security_manager.initialization_strategy" value="xavier"></label></label>
+                    </details>
                     
                     <button type="submit" class="blue">Save Config</button>
                     

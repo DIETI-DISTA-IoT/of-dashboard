@@ -118,7 +118,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
   });
 
   startWandbButton.addEventListener("click", function() {
-      fetch("/start-wandb", {method: "POST"})
+      fetch("/start-wandb", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config)
+      })
         .then(response => response.text())
         .then(data => console.log(data));
   });

@@ -7,8 +7,13 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from OpenFAIR import MessageCache, MetricsLogger, KafkaMessageConsumer, ContainerManager
 import logging
 import time
+import requests
+import json
+
 
 DASHBOARD_NAME = "DASH"
+
+init_config = None
 
 ###
 ## Configure Werkzeug logger to filter out vehicle-status requests
@@ -57,7 +62,7 @@ def processing_message(topic, msg):
 
 @hydra.main(config_path="config", config_name="default", version_base="1.2")
 def create_app(cfg: DictConfig) -> None:
-    global app, msg_cache, metrics_logger
+    global app, msg_cache, metrics_logger, init_config
 
     if cfg.override != "":
         try:
@@ -67,6 +72,8 @@ def create_app(cfg: DictConfig) -> None:
             cfg = OmegaConf.merge(cfg, config_overrides)
         except:
             print('Unsuccesfully tried to use the configuration override: ',cfg.override)
+
+    init_config = OmegaConf.to_container(cfg, resolve=True)
 
     msg_cache = MessageCache(cfg.dashboard.message_cache_len)
     metrics_logger = MetricsLogger(cfg)
@@ -183,7 +190,20 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/start-wandb', methods=['POST'])
     def start_wandb():
-        return container_manager.start_wandb()
+        init_wandb_config = init_config['wandb']
+        config_from_frontend = request.get_json(force=True)
+        fronend_wandb_config = config_from_frontend['wandb']
+        wandb_config = OmegaConf.to_container(OmegaConf.merge(init_wandb_config, fronend_wandb_config))
+        manager_ip = container_manager.containers_ips['wandber']
+        url = f'http://{manager_ip}:5000/command'
+        return requests.post(
+                        url, 
+                        json={
+                            "command": "start_wandb",
+                            "params": wandb_config
+                            }
+                    )
+        
 
 
     @app.route('/start-security-manager', methods=['POST'])

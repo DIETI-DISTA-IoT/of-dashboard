@@ -111,3 +111,138 @@ a:hover {
     background-color: #0056b3;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
+
+
+/* === Two column layout === */
+.main-container {
+  display: flex;
+  height: 100vh;  /* full height viewport */
+}
+
+.sidebar {
+  width: 25%;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-right: 1px solid #ccc;
+}
+
+/* override centering from your current container rules */
+.sidebar .containerForGroup {
+  max-width: none;
+  margin: 20px 0;   /* vertical spacing only */
+}
+
+/* right side */
+.content {
+  width: 75%;
+  height: 100vh;
+}
+
+.content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Tabs header */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.tablink {
+  flex: 1;
+  padding: 10px;
+  background: #076925;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s;
+}
+
+.tablink.active {
+  background: #349e26;
+  font-weight: bold;
+}
+
+.tablink:hover {
+  background: #e0e0e0;
+}
+
+/* Tab content */
+.tabcontent {
+  display: none;
+  width: 100%;
+  height: calc(100vh - 40px); /* adjust for tab bar height */
+}
+
+.tabcontent iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Textbox */
+input[type="text"] {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  margin-right: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input[type="text"]:focus {
+  border-color: #0056b3;
+  box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+  outline: none;
+}
+
+/* Checkbox + label */
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+label {
+  font-size: 14px;
+  color: #333;
+  margin-right: 10px;
+}
+
+
+#config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 10px;
+}
+
+#config-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+#config-form input, 
+#config-form select {
+  margin-top: 4px;
+  padding: 6px;
+  font-size: 14px;
+}
+
+#config-form details {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  background: #fafafa;
+}
+
+#config-form summary {
+  font-weight: bold;
+  cursor: pointer;
+}

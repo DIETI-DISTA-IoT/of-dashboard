@@ -1,5 +1,20 @@
+function openTab(evt, tabId) {
+      // Hide all tabs
+      document.querySelectorAll(".tabcontent").forEach(tab => tab.style.display = "none");
+
+      // Remove 'active' class from all tab buttons
+      document.querySelectorAll(".tablink").forEach(btn => btn.classList.remove("active"));
+
+      // Show the selected tab
+      document.getElementById(tabId).style.display = "block";
+
+      // Mark the clicked button as active
+      evt.currentTarget.classList.add("active");
+    }
+
 window.addEventListener('DOMContentLoaded', (event) => {
 
+  const configForm = document.getElementById("config-form");
   const produceAllButton = document.getElementById("produce-all");
   const consumeAllButton = document.getElementById("consume-all");
   const stopProduceAllButton = document.getElementById("stop-producing-all");
@@ -23,8 +38,49 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const startMitigationButton = document.getElementById("start-mitigation");
   const stopMitigationButton = document.getElementById("stop-mitigation");
 
+  var config = {};
 
+  function updateConfigDict() {
+        const formData = new FormData(configForm);
+        config = {}; // reset
 
+        // First handle all regular inputs (text, number, selects, checked checkboxes)
+        formData.forEach((val, key) => {
+            const keys = key.split('.');
+            let curr = config;
+            for (let i = 0; i < keys.length - 1; i++) {
+                const k = keys[i];
+                curr[k] = curr[k] || {};
+                curr = curr[k];
+            }
+            curr[keys[keys.length - 1]] = val;
+        });
+
+        // Now explicitly handle ALL checkboxes (checked or not)
+        const checkboxes = configForm.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(cb => {
+            const keys = cb.name.split('.');
+            let curr = config;
+            for (let i = 0; i < keys.length - 1; i++) {
+                const k = keys[i];
+                curr[k] = curr[k] || {};
+                curr = curr[k];
+            }
+            curr[keys[keys.length - 1]] = cb.checked;
+        });
+
+    }
+
+  configForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      updateConfigDict();
+      alert("Configuration Saved!!");
+      // TODO: send config dict to backend with fetch/axios
+    });
+
+    updateConfigDict();
+
+  
   startAutomaticAttacksButton.addEventListener("click", function() {
       fetch("/start-automatic-attacks", {method: "POST"})
         .then(response => response.text())

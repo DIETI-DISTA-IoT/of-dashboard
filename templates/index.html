@@ -6,67 +6,105 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='/js/dashboard.js') }}"></script>
     
-    <title>Open-FAIR Dashboard</title>
+    <title>Open-FAIR</title>
 </head>
 <body>
-    <h1>Open-FAIR SereWay</h1>
-    <div class="containerForGroup">
-        <h2>Train Manager</h2>
-        <nav>
-            <button id="start-experiment">Start full experiment</button>
-            <button id="shutdown" class="stop">Shutdown all</button>
-            <button id="start-mitigation">Start mitigation</button>
-            <button id="stop-mitigation" class="stop">Stop mitigation</button>
-        </nav>
-        <nav>
-            <button id="create-vehicles">Create vehicles</button>
-            <button id="delete-vehicles" class="stop">Delete vehicles</button>
-        </nav>
-        <nav>
-            <button id="start-wandb">Start wandb</button>
-            <button id="stop-wandb" class="stop">Stop wandb</button>
-        </nav>
-        <nav>
-            <button id="produce-all">Start producers</button>
-            <button id="stop-producing-all" class="stop">Stop all producers</button>
-        </nav>
-        <nav>
-            <button id="consume-all">Start consumers</button>
-            <button id="stop-consuming-all" class="stop">Stop all consumers</button>
+    
+    <div class="main-container">
 
-        </nav>
-        <nav>
-            <button id="start-federated-learning">Start Federated Learning</button>
-            <button id="stop-federated-learning" class="stop">Stop Federated Learning</button>
-        </nav>
-        <nav>
-            <button id="start-security-manager">Start Security Manager</button>
-            <button id="stop-security-manager" class="stop">Stop Security Manager</button>
-        </nav>
+        <div class="sidebar">
+            <h1>Open-FAIR</h1>
+            <div class="containerForGroup">
+                <h2>Train Manager</h2>
+                <nav>
+                    <button id="start-experiment">Start full experiment</button>
+                    <button id="shutdown" class="stop">Shutdown all</button>
+                    <button id="start-mitigation">Start mitigation</button>
+                    <button id="stop-mitigation" class="stop">Stop mitigation</button>
+                </nav>
+                <nav>
+                    <button id="create-vehicles">Create vehicles</button>
+                    <button id="delete-vehicles" class="stop">Delete vehicles</button>
+                </nav>
+                <nav>
+                    <button id="start-wandb">Start wandb</button>
+                    <button id="stop-wandb" class="stop">Stop wandb</button>
+                </nav>
+                <nav>
+                    <button id="produce-all">Start producers</button>
+                    <button id="stop-producing-all" class="stop">Stop all producers</button>
+                </nav>
+                <nav>
+                    <button id="consume-all">Start consumers</button>
+                    <button id="stop-consuming-all" class="stop">Stop all consumers</button>
+
+                </nav>
+                <nav>
+                    <button id="start-federated-learning">Start Federated Learning</button>
+                    <button id="stop-federated-learning" class="stop">Stop Federated Learning</button>
+                </nav>
+                <nav>
+                    <button id="start-security-manager">Start Security Manager</button>
+                    <button id="stop-security-manager" class="stop">Stop Security Manager</button>
+                </nav>
+            </div>
         
-        <!--nav>
-            <a href="/real-all-data">Show latest messages</a><br>
-            <a href="/real-anomalies-data">Show latets anomaly messages</a><br>
-            <a href="/real-normal-data">Show latest diagnostics messages</a><br>
-            <a href="/statistics">Show latest training statistics</a><br>
-        </nav-->
+            <div class="containerForGroup">
+                <h2>Bot Master</h2>
+                <nav>
+                    <button id="start-automatic-attacks">Start Automatic Attacks</button>
+                    <button id="stop-automatic-attacks" class="stop">Stop Automatic Attacks</button>
+                </nav>
+                <nav>
+                    <button id="start-preconf-attack">Start Preconfigured Attack</button>
+                    <button id="stop-preconf-attack" class="stop">Stop Preconfigured Attack</button>
+                </nav>
+                {% for button in rendering_params.botmaster_buttons %}
+                    <nav>
+                        <button id="{{ button }}_start_attack">attack from {{ button }}</button>
+                        <button id="{{ button }}_end_attack" class="stop">stop attacking from {{ button }}</button>
+                    </nav>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tablink active" onclick="openTab(event, 'config')">CONFIGURATION</button>
+                <button class="tablink" onclick="openTab(event, 'dash-log')">DASH LOG</button>
+            </div>
+
+            <div id="config" class="tabcontent" style="display:block;">
+                <form id="config-form">
+                    <h2>Configuration</h2>
+
+                    <!-- Simple top-level fields -->
+                    <label>Log Level:
+                        <select name="logging_level">
+                        <option value="info" selected>info</option>
+                        <option value="debug">debug</option>
+                        <option value="warn">warn</option>
+                        <option value="error">error</option>
+                        </select>
+                    </label>
+                   
+                    <details>
+                        <summary>WandB</summary>
+                        <label>Project Name: <input type="text" name="wandb.project_name" value="SmartVille"></label>
+                        <label>Run Name: <input type="text" name="wandb.run_name" value="Some run"></label>
+                        <label>Online: <input type="checkbox" name="wandb.online" checked></label>
+                        <label>Kafka Broker URL: <input type="text" name="wandb.kafka_broker_url" value="kafka:9092"></label>
+                        <label>Kafka Consumer Group ID: <input type="text" name="wandb.kafka_consumer_group_id" value="wandber"></label>
+                        <label>Kafka Auto Offset Reset: <input type="text" name="wandb.kafka_auto_offset_reset" value="earliest"></label>
+                        <</label>
+                    </details>
+
+                    
+                    <button type="submit" class="blue">Save Config</button>
+                    
+                </form>
+        </div>
     </div>
-    <div class="containerForGroup">
-        <h2>Bot Master</h2>
-        <nav>
-            <button id="start-automatic-attacks">Start Automatic Attacks</button>
-            <button id="stop-automatic-attacks" class="stop">Stop Automatic Attacks</button>
-        </nav>
-        <nav>
-            <button id="start-preconf-attack">Start Preconfigured Attack</button>
-            <button id="stop-preconf-attack" class="stop">Stop Preconfigured Attack</button>
-        </nav>
-        {% for button in rendering_params.botmaster_buttons %}
-            <nav>
-                <button id="{{ button }}_start_attack">attack from {{ button }}</button>
-                <button id="{{ button }}_end_attack" class="stop">stop attacking from {{ button }}</button>
-            </nav>
-        {% endfor %}
-        
+
 </body>
 </html>

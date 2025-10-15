@@ -228,8 +228,15 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/stop-wandb', methods=['POST'])
     def stop_wandb():
-        return container_manager.stop_wandb()
-
+        manager_ip = container_manager.containers_ips['wandber']
+        url = f'http://{manager_ip}:5000/command'
+        return requests.post(
+                        url, 
+                        json={
+                            "command": "stop_wandb",
+                            "params": {}
+                            }
+                    )
 
     @app.route('/real-all-data')
     def get_all_real_data():

@@ -45,7 +45,7 @@ RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard /app
 
 WORKDIR /app
 
-# Also add the OpenFAIR package to PYTHONPATH by copying the project root
+# Also add the OpenFAIR package
 RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # NOTE: config/ will be provided at runtime via a bind-mount (see docker-compose.yml)
 

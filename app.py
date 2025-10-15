@@ -208,8 +208,20 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/start-security-manager', methods=['POST'])
     def start_security_manager():
-        return container_manager.start_security_manager()
-    
+        init_sm_config = init_config['security_manager']
+        config_from_frontend = request.get_json(force=True)
+        fronend_sm_config = config_from_frontend['security_manager']
+        sm_config = OmegaConf.to_container(OmegaConf.merge(init_sm_config, fronend_sm_config))
+        sm_config['dashboard_endpoint'] = container_manager.containers_ips['dashboard']+":"+str(init_config['dashboard']['port'])
+        manager_ip = container_manager.containers_ips['security-manager']
+        url = f'http://{manager_ip}:5000/command'
+        return requests.post(
+                        url, 
+                        json={
+                            "command": "start_security_manager",
+                            "params": sm_config
+                            }
+                    )
 
     @app.route('/stop-security-manager', methods=['POST'])
     def stop_security_manager():

@@ -196,13 +196,14 @@ def create_app(cfg: DictConfig) -> None:
         wandb_config = OmegaConf.to_container(OmegaConf.merge(init_wandb_config, fronend_wandb_config))
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
-        return requests.post(
+        response = requests.post(
                         url, 
                         json={
                             "command": "start_wandb",
                             "params": wandb_config
                             }
                     )
+        return response.json()
         
 
 
@@ -210,30 +211,32 @@ def create_app(cfg: DictConfig) -> None:
     def start_security_manager():
         init_sm_config = init_config['security_manager']
         config_from_frontend = request.get_json(force=True)
-        fronend_sm_config = config_from_frontend['security_manager']
-        sm_config = OmegaConf.to_container(OmegaConf.merge(init_sm_config, fronend_sm_config))
+        frontend_sm_config = config_from_frontend['security_manager']
+        sm_config = OmegaConf.to_container(OmegaConf.merge(init_sm_config, frontend_sm_config))
         sm_config['dashboard_endpoint'] = container_manager.containers_ips['dashboard']+":"+str(init_config['dashboard']['port'])
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
-        return requests.post(
+        response = requests.post(
                         url, 
                         json={
                             "command": "start_security_manager",
                             "params": sm_config
                             }
                     )
+        return response.json()
 
     @app.route('/stop-security-manager', methods=['POST'])
     def stop_security_manager():
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
-        return requests.post(
+        response = requests.post(
                         url, 
                         json={
                             "command": "stop_security_manager",
                             "params": {}
                             }
                     )
+        return response.json()
 
 
     @app.route('/create-vehicles', methods=['POST'])
@@ -250,13 +253,14 @@ def create_app(cfg: DictConfig) -> None:
     def stop_wandb():
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
-        return requests.post(
+        response = requests.post(
                         url, 
                         json={
                             "command": "stop_wandb",
                             "params": {}
                             }
                     )
+        return response.json()
 
     @app.route('/real-all-data')
     def get_all_real_data():

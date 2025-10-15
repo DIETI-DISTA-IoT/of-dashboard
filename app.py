@@ -273,48 +273,32 @@ def create_app(cfg: DictConfig) -> None:
         return render_template('realdatavisualization.html', messages=msg_cache.cache["all"])
 
 
-    @app.route('/real-anomalies-data')
-    def get_anomalies_real_data():
-        """
-        Render the page displaying the last 100 anomaly messages.
-
-        Returns:
-            str: The HTML for the anomaly data visualization page.
-        """
-        return render_template('realdatavisualization.html', messages=msg_cache.cache["anomalies"])
-
-
-    @app.route('/real-normal-data')
-    def get_normal_real_data():
-        """
-        Render the page displaying the last 100 normal messages.
-
-        Returns:
-            str: The HTML for the normal data visualization page.
-        """
-        return render_template('realdatavisualization.html', messages=msg_cache.cache["diagnostics"])
-
-
-    @app.route('/statistics')
-    def get_statistics():
-        """
-        Render the statistics page with vehicle statistics.
-
-        Returns:
-            str: The HTML for the statistics page.
-        """
-        sorted_stats = {k: metrics_logger.metrics[k] for k in sorted(metrics_logger.metrics)}
-        return render_template('statistics.html', all_stats=sorted_stats)
-
-
     @app.route('/start-mitigation', methods=['POST'])
     def start_mitigation():
-        return container_manager.start_mitigation()
+        manager_ip = container_manager.containers_ips['wandber']
+        url = f'http://{manager_ip}:5000/command'
+        response = requests.post(
+                        url, 
+                        json={
+                            "command": "start_mitigation",
+                            "params": {}
+                            }
+                    )
+        return response.json()
     
 
     @app.route('/stop-mitigation', methods=['POST'])
     def stop_mitigation():
-        return container_manager.stop_mitigation()
+        manager_ip = container_manager.containers_ips['wandber']
+        url = f'http://{manager_ip}:5000/command'
+        response = requests.post(
+                        url, 
+                        json={
+                            "command": "stop_mitigation",
+                            "params": {}
+                            }
+                    )
+        return response.json()
     
 
     @app.route('/start-experiment', methods=['POST'])

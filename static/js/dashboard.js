@@ -148,7 +148,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
   });
 
   startFederatedLearningButton.addEventListener("click", function() {
-      fetch("/start-federated-learning", {method: "POST"})
+      fetch("/start-federated-learning", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(config)
+      })
         .then(response => response.text())
         .then(data => console.log(data));
   });

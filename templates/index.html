@@ -111,6 +111,26 @@
                         <label>Training Frequency (in seconds): <input type="text" name="security_manager.training_freq_seconds" value="10"></label>
                         <label>Initialisation Strategy: <input type="text" name="security_manager.initialization_strategy" value="xavier"></label></label>
                     </details>
+
+
+                    <details>
+                        <summary>Federated Learning</summary>
+                        <label>Aggregation Strategy:
+                            <select name="federated_learning.aggregation_strategy">
+                                <option value="fedavg" selected>fedavg</option>
+                                <option value="fedyogi">fedyogi</option>
+                            </select>
+                        </label>
+                        <label>Initialisation Strategy:
+                            <select name="federated_learning.initialization_strategy">
+                                <option value="fedavg" selected>xavier</option>
+                                <option value="he">he</option>
+                                <option value="normal">normal</option>
+                            </select>
+                        </label>
+                        <label>Aggregation Interval (in seconds): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
+                        <label> Weights Buffer Size: <input type="text" name="federated_learning.weights_buffer_size" value="5"></label>
+                    </details>
                     
                     <button type="submit" class="blue">Save Config</button>
                     

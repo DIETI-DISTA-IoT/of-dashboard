@@ -37,6 +37,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const startExperimentButton = document.getElementById("start-experiment");
   const startMitigationButton = document.getElementById("start-mitigation");
   const stopMitigationButton = document.getElementById("stop-mitigation");
+  const logtabs = Array.from(document.querySelectorAll('[id$="_log"]'));
 
   var config = {};
 
@@ -71,16 +72,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
+  updateConfigDict();
+
+
   configForm.addEventListener("submit", function(e) {
       e.preventDefault();
       updateConfigDict();
       alert("Configuration Saved!!");
       // TODO: send config dict to backend with fetch/axios
-    });
+  });
 
-    updateConfigDict();
-
-  
   startAutomaticAttacksButton.addEventListener("click", function() {
       fetch("/start-automatic-attacks", {method: "POST"})
         .then(response => response.text())
@@ -209,6 +210,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
       });
   });
 
+  logtabs.forEach(tab => {
+    
+    const containerName = tab.id.split('_log')[0];
+    const logBox = document.getElementById(`${containerName}-log-box`);
+
+    if (logBox) {
+        console.log(`Streaming logs for container ${containerName}`);
+        const eventSource = new EventSource(`/logs/${containerName}`);
+        eventSource.onmessage = (event) => {
+          logBox.textContent += event.data + "\n";
+          logBox.scrollTop = logBox.scrollHeight;
+        };
+        eventSource.onerror = () => {
+          logBox.textContent += "[Log stream disconnected]\n";
+        };
+    }
+  });
+      
+
   stopAttackButtons.forEach(button => {
       button.addEventListener("click", function() {
           fetch("/stop-attack", {
@@ -249,4 +269,5 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => console.log(data));
   });
   
+
 });

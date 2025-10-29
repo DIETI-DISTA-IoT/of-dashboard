@@ -1,6 +1,6 @@
 from omegaconf import DictConfig, OmegaConf 
 import hydra
-from flask import Flask,  render_template, request
+from flask import Flask,  render_template, request, Response
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -343,9 +343,20 @@ def create_app(cfg: DictConfig) -> None:
         return 'CAN SHUTDOWN NOW...', 200
     
 
+    @app.route('/logs/<container_name>')
+    def stream_container_logs(container_name):
+        logger.info(f"Streaming logs for container {container_name}")
+        return Response(
+            container_manager.stream_container_logs(container_name), 
+            mimetype="text/event-stream")
+    
+
     # Run the Flask app
     app.run(host=cfg.dashboard.host, port=cfg.dashboard.port)   
     
+
+
+
 
 if __name__ == "__main__":
     create_app()

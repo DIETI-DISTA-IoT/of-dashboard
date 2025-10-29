@@ -71,7 +71,11 @@
         <div class="content">
             <div class="tabs">
                 <button class="tablink active" onclick="openTab(event, 'config')">CONFIGURATION</button>
-                <button class="tablink" onclick="openTab(event, 'dash-log')">DASH LOG</button>
+                <!--button class="tablink" onclick="openTab(event, 'dash-log')">DASH LOG</button-->
+                {% for button in rendering_params.botmaster_buttons %}
+                    <button id="{{ button }}_producer_log" class="tablink" onclick="openTab(event, '{{ button }}_producer-log')">{{ button }} Producer logs</button>                    
+                    <button id="{{ button }}_consumer_log" class="tablink" onclick="openTab(event, '{{ button }}_consumer-log')">{{ button }} Consumer logs</button>                    
+                {% endfor %}
             </div>
 
             <div id="config" class="tabcontent" style="display:block;">
@@ -135,7 +139,23 @@
                     <button type="submit" class="blue">Save Config</button>
                     
                 </form>
-        </div>
+        
+            </div>
+            <!--div id="dash-log" class="tabcontent">
+                <h2>Dashboard Log</h2>
+                <div id="dashboard-log-box"  class="log-box"></div>
+            </div-->
+            {% for button in rendering_params.botmaster_buttons %}
+                <div id="{{ button }}_consumer-log" class="tabcontent">
+                    <h2>{{ button }} Consumer Log</h2>
+                    <div id="{{ button }}_consumer-log-box"  class="log-box"></div>
+                </div>
+                <div id="{{ button }}_producer-log" class="tabcontent">
+                    <h2>{{ button }} Producer Log</h2>
+                    <div id="{{ button }}_producer-log-box"  class="log-box"></div>
+                </div>
+            {% endfor %}
+
     </div>
 
 </body>

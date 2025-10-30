@@ -23,7 +23,7 @@ logger = logging.getLogger('werkzeug')
 logger.name = 'DASHBOARD'
 original_handle = logger.handle
 def custom_handle(record):
-    substrings_to_ignore = ['vehicle-status', 'stop-attack', 'start-attack']
+    substrings_to_ignore = ['vehicle-status', 'stop-attack', 'start-attack', 'logs']
 
     for substring in substrings_to_ignore:
         if substring in record.getMessage():
@@ -344,12 +344,20 @@ def create_app(cfg: DictConfig) -> None:
     
 
     @app.route('/logs/<container_name>')
-    def stream_container_logs(container_name):
-        logger.info(f"Streaming logs for container {container_name}")
-        return Response(
-            container_manager.stream_container_logs(container_name), 
-            mimetype="text/event-stream")
-    
+    def logs(container_name):
+        try:
+            c = container_manager.client.containers.get(container_name)
+            # get the last N lines only
+            output = c.logs(tail=100).decode('utf-8', errors='replace')
+            since = request.args.get("since", type=float)  # Unix timestamp in seconds
+            if since:
+                output = c.logs(since=since).decode('utf-8', errors='replace')
+            else:
+                output = c.logs(tail=100).decode('utf-8', errors='replace')
+            return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+        except Exception as e:
+            logger.error(f"Error getting logs for container {container_name}: {e}")
+            return f"[ERROR] {e}\n", 500, {'Content-Type': 'text/plain; charset=utf-8'}
 
     # Run the Flask app
     app.run(host=cfg.dashboard.host, port=cfg.dashboard.port)   

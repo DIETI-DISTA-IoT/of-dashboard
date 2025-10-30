@@ -38,6 +38,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const startMitigationButton = document.getElementById("start-mitigation");
   const stopMitigationButton = document.getElementById("stop-mitigation");
   const logtabs = Array.from(document.querySelectorAll('[id$="_log"]'));
+  const POLL_MS = 1000; // every 1s
+  let lastTime = Math.floor(Date.now() / 1000);
 
   var config = {};
 
@@ -210,22 +212,37 @@ window.addEventListener('DOMContentLoaded', (event) => {
       });
   });
 
+
+  
+  async function poll(box, container_name) {
+    try {
+      const resp = await fetch(`/logs/${container_name}?since=${lastTime}`);
+      if (!resp.ok) throw new Error(resp.status);
+      const text = await resp.text();
+      if (text.trim()) {
+        box.textContent += text + "\n";
+        box.scrollTop = box.scrollHeight;
+      }
+      // console.log(`${container_name} Received ${text.split('\n').length} lines of logs since ${lastTime}`);
+      // update timestamp for next call
+      lastTime = Math.floor(Date.now() / 1000);
+
+    } catch (err) {
+      box.textContent += `\n[Error fetching logs: ${err.message}]`;
+    }
+  }
+
+
   logtabs.forEach(tab => {
     
     const containerName = tab.id.split('_log')[0];
     const logBox = document.getElementById(`${containerName}-log-box`);
 
     if (logBox) {
-        console.log(`Streaming logs for container ${containerName}`);
-        const eventSource = new EventSource(`/logs/${containerName}`);
-        eventSource.onmessage = (event) => {
-          logBox.textContent += event.data + "\n";
-          logBox.scrollTop = logBox.scrollHeight;
-        };
-        eventSource.onerror = () => {
-          logBox.textContent += "[Log stream disconnected]\n";
-        };
-    }
+        console.log(`Starting Streaming logs for container ${containerName}`);
+        poll(logBox,containerName);
+        setInterval(() => poll(logBox, containerName), POLL_MS);
+      }
   });
       
 

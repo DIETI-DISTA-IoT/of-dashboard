@@ -229,6 +229,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     } catch (err) {
       box.textContent += `\n[Error fetching logs: ${err.message}]`;
+      box.scrollTop = box.scrollHeight;
     }
   }
 

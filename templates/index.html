@@ -71,7 +71,7 @@
         <div class="content">
             <div class="tabs">
                 <button class="tablink active" onclick="openTab(event, 'config')">CONFIGURATION</button>
-                <!--button class="tablink" onclick="openTab(event, 'dash-log')">DASH LOG</button-->
+                <button id="dashboard_log" class="tablink" onclick="openTab(event, 'dashboard-log')">DASH LOG</button>
                 <button id="wandber_log" class="tablink" onclick="openTab(event, 'wandber-log')">WANDBER LOG</button>
                 {% for button in rendering_params.botmaster_buttons %}
                     <button id="{{ button }}_producer_log" class="tablink" onclick="openTab(event, '{{ button }}_producer-log')">{{ button }} Producer logs</button>                    
@@ -142,10 +142,10 @@
                 </form>
         
             </div>
-            <!--div id="dash-log" class="tabcontent">
+            <div id="dashboard-log" class="tabcontent">
                 <h2>Dashboard Log</h2>
                 <div id="dashboard-log-box"  class="log-box"></div>
-            </div-->
+            </div>
             <div id="wandber-log" class="tabcontent">
                 <h2>Wandber Log</h2>
                 <div id="wandber-log-box"  class="log-box"></div>

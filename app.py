@@ -347,9 +347,9 @@ def create_app(cfg: DictConfig) -> None:
     def logs(container_name):
         try:
             c = container_manager.client.containers.get(container_name)
-            # get the last N lines only
-            output = c.logs(tail=100).decode('utf-8', errors='replace')
-            since = request.args.get("since", type=float)  # Unix timestamp in seconds
+            if c.status != 'running':
+                return f"[ERROR] Container {container_name} is not running\n", 500, {'Content-Type': 'text/plain; charset=utf-8'}        
+            since = request.args.get("since", type=float)  # Unix timestamp in millis
             if since:
                 output = c.logs(since=since).decode('utf-8', errors='replace')
             else:

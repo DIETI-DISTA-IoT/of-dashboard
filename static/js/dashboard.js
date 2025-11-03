@@ -225,12 +225,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
       const resp = await fetch(`/logs/${container_name}?since=${since}`);
       if (!resp.ok) throw new Error(resp.status);
       const text = await resp.text();
+      console.log(`tab ${tab.id} Received text:`, text);
       if (text.trim()) {
         box.textContent += text + "\n";
         box.scrollTop = box.scrollHeight;
       }
       // update timestamp for next call
-      lastTimeDict[tab.id] = new Date().getTime();
+      lastTimeDict[tab.id] = Date.now() / 1000;
       // console.log(`tab ${tab.id} new last time: ${lastTimeDict[tab.id]}`);
 
     } catch (err) {

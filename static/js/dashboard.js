@@ -39,7 +39,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const stopMitigationButton = document.getElementById("stop-mitigation");
   const logtabs = Array.from(document.querySelectorAll('[id$="_log"]'));
   const POLL_MS = 1000; // every 1s
-  let lastTime = Math.floor(Date.now() / 1000);
+  const lastTimeDict = {};
+  logtabs.forEach(tab => lastTimeDict[tab.id] = 0);
 
   var config = {};
 
@@ -214,22 +215,28 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
 
   
-  async function poll(box, container_name) {
+  async function poll(tab, box, container_name, force=false) {
     try {
-      const resp = await fetch(`/logs/${container_name}?since=${lastTime}`);
+      if (!tab.classList.contains("active") && !force) return;
+
+      const since = lastTimeDict[tab.id] || 0;
+      // console.log(`tab ${tab.id}  last time: ${since}`);
+
+      const resp = await fetch(`/logs/${container_name}?since=${since}`);
       if (!resp.ok) throw new Error(resp.status);
       const text = await resp.text();
       if (text.trim()) {
         box.textContent += text + "\n";
         box.scrollTop = box.scrollHeight;
       }
-      // console.log(`${container_name} Received ${text.split('\n').length} lines of logs since ${lastTime}`);
       // update timestamp for next call
-      lastTime = Math.floor(Date.now() / 1000);
+      lastTimeDict[tab.id] = new Date().getTime();
+      // console.log(`tab ${tab.id} new last time: ${lastTimeDict[tab.id]}`);
 
     } catch (err) {
       box.textContent += `\n[Error fetching logs: ${err.message}]`;
       box.scrollTop = box.scrollHeight;
+      console.error(err);
     }
   }
 
@@ -241,8 +248,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     if (logBox) {
         console.log(`Starting Streaming logs for container ${containerName}`);
-        poll(logBox,containerName);
-        setInterval(() => poll(logBox, containerName), POLL_MS);
+        poll(tab, logBox,containerName, force=true);
+        setInterval(() => poll(tab, logBox, containerName), POLL_MS);
       }
   });
       

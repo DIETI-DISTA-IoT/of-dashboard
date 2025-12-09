@@ -70,8 +70,9 @@ def create_app(cfg: DictConfig) -> None:
             config_overrides = OmegaConf.load(hydra.utils.get_original_cwd() + f'/config/overrides/{cfg.override}.yaml')
             # Merge configurations, with the variant overriding the base config
             cfg = OmegaConf.merge(cfg, config_overrides)
-        except:
-            print('Unsuccesfully tried to use the configuration override: ',cfg.override)
+        except Exception as e:
+            print('Unsuccesfully tried to use the configuration override: ',cfg.override, " Error: ", e)
+            assert False
 
     init_config = OmegaConf.to_container(cfg, resolve=True)
 

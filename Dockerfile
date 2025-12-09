@@ -41,12 +41,12 @@ ARG CACHE_BUST=1
 # Copy all project files into the working directory of the container
 # This includes Python scripts, Flask configuration, and any additional resources needed by the application.
 # Copy only the dashboard code into its workdir
-RUN git clone https://github.com/DIETI-DISTA-IoT/of-dashboard /app
+RUN git clone --branch sereBench https://github.com/DIETI-DISTA-IoT/of-dashboard /app
 
 WORKDIR /app
 
 # Also add the OpenFAIR package
-RUN git clone https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
+RUN git clone --branch sereBench https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # NOTE: config/ will be provided at runtime via a bind-mount (see docker-compose.yml)
 
 # Install the dependencies specified in the requirements file

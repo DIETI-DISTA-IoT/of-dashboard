@@ -329,7 +329,7 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/shutdown', methods=['POST'])
     def shutdown():
-        container_manager.stop_security_manager()
+        stop_security_manager()
         time.sleep(2)
         container_manager.stop_federated_learning()
         time.sleep(2)
@@ -339,7 +339,7 @@ def create_app(cfg: DictConfig) -> None:
         time.sleep(2)
         container_manager.stop_automatic_attacks()
         time.sleep(2)
-        container_manager.stop_wandb()
+        stop_wandb()
         time.sleep(4)
         return 'CAN SHUTDOWN NOW...', 200
     

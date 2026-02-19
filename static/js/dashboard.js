@@ -31,6 +31,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const stopAutomaticAttacksButton = document.getElementById("stop-automatic-attacks");
   const startAttackButtons = Array.from(document.querySelectorAll('[id$="_start_attack"]'));
   const stopAttackButtons = Array.from(document.querySelectorAll('[id$="_end_attack"]'))
+  const Bp_std_inputs = Array.from(document.querySelectorAll('[id$=".Bp_std"]'));
+  const Mp_std_inputs = Array.from(document.querySelectorAll('[id$=".Mp_std"]'));
+  const resetNoiseButtons = Array.from(document.querySelectorAll('[id$="_reset_noise"]'));
   const startPreconfAttackButton = document.getElementById("start-preconf-attack");
   const stopPreconfAttackButton = document.getElementById("stop-preconf-attack");
   const shutdownButton = document.getElementById("shutdown");
@@ -212,6 +215,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
           .then(data => console.log(data));
       });
   });
+
+
+  resetNoiseButtons.forEach(button => {
+      button.addEventListener("click", function() {
+          fetch("/reset-noise", {
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                vehicle_name: button.id,
+                Mp_std: document.getElementById(`${button.id.split('_')[0]}.Mp_std`).value,
+                Bp_std: document.getElementById(`${button.id.split('_')[0]}.Bp_std`).value
+              })
+          })
+          .then(response => response.text())
+          .then(data => console.log(data));
+      });
+  })
 
 
   

@@ -149,6 +149,15 @@ def create_app(cfg: DictConfig) -> None:
         attacking_vehicle = chosen_vehicle.split("_")[0]
         return container_manager.stop_attack_from_vehicle(attacking_vehicle, origin)
     
+    @app.route("/reset-noise", methods=["POST"])
+    def reset_noise():
+        data = request.get_json()
+        chosen_vehicle = data['vehicle_name'].split("_")[0]
+        Bp_std = data['Bp_std']
+        Mp_std = data['Mp_std']
+
+        return container_manager.reset_noise(chosen_vehicle, Bp_std, Mp_std)
+    
 
     @app.route("/start-preconf-attack", methods=["POST"])
     def start_preconf_attack():

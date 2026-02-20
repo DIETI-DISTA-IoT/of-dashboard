@@ -63,11 +63,12 @@
                     <nav>
                         <button id="{{ button }}_start_attack">attack from {{ button }}</button>
                         <button id="{{ button }}_end_attack" class="stop">stop attacking from {{ button }}</button>
-                        <nav>
-                            <label>{{ button }} Mp_std: <input type="text" id="{{ button }}.Mp_std" value="Mp_std"></label>
-                            <label>{{ button }} Bp_std: <input type="text" id="{{ button }}.Bp_std" value="Bp_std"></label>
-                            <button id="{{ button }}_reset_noise">reset noise</button>
-                        </nav>
+                        {% if button in rendering_params %}
+                            <label>{{ button }} Mp_std: <input type="text" id="{{ button }}.Mp_std" value="{{ rendering_params[button]['Mp_std'] }}"></label>
+                            <label>{{ button }} Bp_std: <input type="text" id="{{ button }}.Bp_std" value="{{ rendering_params[button]['Bp_std'] }}"></label>
+                        {% else %}
+                            <p>No vehicle data for {{ button }}</p>
+                        {% endif %}
                     </nav>
                 {% endfor %}
             </div>

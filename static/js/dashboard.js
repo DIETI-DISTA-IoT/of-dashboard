@@ -80,6 +80,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   updateConfigDict();
 
+  function loadStdValuesOnVehicles(){
+    for (let i = 0; i < Bp_std_inputs.length; i++) {
+      vehicle_name = Bp_std_inputs[i].id.split('.')[0];
+      Bp_std_inputs[i].value = config['vehicles'][i]['Bp_std'];
+      Mp_std_inputs[i].value = config['vehicles'][i]['Mp_std'];
+    }
+  }
+
 
   configForm.addEventListener("submit", function(e) {
       e.preventDefault();

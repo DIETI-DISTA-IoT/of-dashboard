@@ -112,7 +112,12 @@ def create_app(cfg: DictConfig) -> None:
         rendering_params = {
             "botmaster_buttons" : container_manager.vehicle_names
         }
-
+        
+        for vehicle_name in container_manager.vehicle_names:
+            for vehicle in init_config['vehicles']:
+                if list(vehicle.keys())[0] == vehicle_name:
+                    rendering_params[vehicle_name] = list(vehicle.values())[0]
+        
         return render_template('index.html', rendering_params=rendering_params)
     
 

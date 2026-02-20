@@ -66,6 +66,7 @@
                         {% if button in rendering_params %}
                             <label>{{ button }} Mp_std: <input type="text" id="{{ button }}.Mp_std" value="{{ rendering_params[button]['Mp_std'] }}"></label>
                             <label>{{ button }} Bp_std: <input type="text" id="{{ button }}.Bp_std" value="{{ rendering_params[button]['Bp_std'] }}"></label>
+                            <button id="{{ button }}_reset_noise">reset noise</button>
                         {% else %}
                             <p>No vehicle data for {{ button }}</p>
                         {% endif %}

@@ -19,8 +19,6 @@
                 <nav>
                     <button id="start-experiment">Start full experiment</button>
                     <button id="shutdown" class="stop">Shutdown all</button>
-                    <button id="start-mitigation">Start mitigation</button>
-                    <button id="stop-mitigation" class="stop">Stop mitigation</button>
                 </nav>
                 <nav>
                     <button id="create-vehicles">Create vehicles</button>
@@ -43,10 +41,6 @@
                     <button id="start-federated-learning">Start Federated Learning</button>
                     <button id="stop-federated-learning" class="stop">Stop Federated Learning</button>
                 </nav>
-                <nav>
-                    <button id="start-security-manager">Start Security Manager</button>
-                    <button id="stop-security-manager" class="stop">Stop Security Manager</button>
-                </nav>
             </div>
         
             <div class="containerForGroup">
@@ -54,10 +48,6 @@
                 <nav>
                     <button id="start-automatic-attacks">Start Automatic Attacks</button>
                     <button id="stop-automatic-attacks" class="stop">Stop Automatic Attacks</button>
-                </nav>
-                <nav>
-                    <button id="start-preconf-attack">Start Preconfigured Attack</button>
-                    <button id="stop-preconf-attack" class="stop">Stop Preconfigured Attack</button>
                 </nav>
                 {% for button in rendering_params.botmaster_buttons %}
                     <nav>

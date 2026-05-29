@@ -120,21 +120,42 @@
 
                     <details>
                         <summary>Federated Learning</summary>
+
                         <label>Aggregation Strategy:
-                            <select name="federated_learning.aggregation_strategy">
-                                <option value="fedavg" selected>fedavg</option>
-                                <option value="fedyogi">fedyogi</option>
+                            <select name="federated_learning.aggregation_strategy" id="fl-strategy">
+                                <option value="fedavg" selected>FedAvg</option>
+                                <option value="fedyogi">FedYogi</option>
+                                <option value="fedmedian">FedMedian</option>
+                                <option value="fedprox">FedProx</option>
                             </select>
                         </label>
                         <label>Initialisation Strategy:
                             <select name="federated_learning.initialization_strategy">
-                                <option value="fedavg" selected>xavier</option>
+                                <option value="xavier" selected>xavier</option>
                                 <option value="he">he</option>
                                 <option value="normal">normal</option>
                             </select>
                         </label>
-                        <label>Aggregation Interval (in seconds): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
-                        <label> Weights Buffer Size: <input type="text" name="federated_learning.weights_buffer_size" value="5"></label>
+                        <label>Aggregation Interval (s): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
+                        <label>Weights Buffer Size: <input type="text" name="federated_learning.weights_buffer_size" value="5"></label>
+
+                        <!-- FedYogi-specific params (shown only when fedyogi is selected) -->
+                        <div id="fl-yogi-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;">
+                            <p style="margin: 4px 0; font-size: 0.85em; color: #555;">FedYogi server-side optimizer parameters</p>
+                            <label>Server Learning Rate: <input type="text" name="federated_learning.learning_rate" value="0.01"></label>
+                            <label>&beta;<sub>1</sub> (momentum): <input type="text" name="federated_learning.yogi_beta1" value="0.9"></label>
+                            <label>&beta;<sub>2</sub> (adaptive): <input type="text" name="federated_learning.yogi_beta2" value="0.999"></label>
+                            <label>&epsilon; (stability): <input type="text" name="federated_learning.yogi_epsilon" value="0.001"></label>
+                        </div>
+
+                        <!-- FedProx-specific params (shown only when fedprox is selected) -->
+                        <div id="fl-prox-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;">
+                            <p style="margin: 4px 0; font-size: 0.85em; color: #555;">FedProx client-side proximal regularisation</p>
+                            <label>Proximal Coefficient &mu;:
+                                <input type="text" name="default_consumer_config.fedprox_mu" value="0.01">
+                            </label>
+                        </div>
+
                     </details>
                     
                     <button type="submit" class="blue">Save Config</button>

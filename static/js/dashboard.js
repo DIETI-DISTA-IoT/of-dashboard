@@ -180,35 +180,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => console.log(data));
   });
 
-  startSecurityManagerButton.addEventListener("click", function() {
-      fetch("/start-security-manager", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(config)
-      })
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startSecurityManagerButton.addEventListener("click", function() {
+  //     fetch("/start-security-manager", {
+  //       method: "POST",
+  //       headers: {
+  //           'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(config)
+  //     })
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  stopSecurityManagerButton.addEventListener("click", function() {
-      fetch("/stop-security-manager", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopSecurityManagerButton.addEventListener("click", function() {
+  //     fetch("/stop-security-manager", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  startPreconfAttackButton.addEventListener("click", function() {
-      fetch("/start-preconf-attack", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startPreconfAttackButton.addEventListener("click", function() {
+  //     fetch("/start-preconf-attack", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  stopPreconfAttackButton.addEventListener("click", function() {
-      fetch("/stop-preconf-attack", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopPreconfAttackButton.addEventListener("click", function() {
+  //     fetch("/stop-preconf-attack", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
   startAttackButtons.forEach(button => {
       button.addEventListener("click", function() {

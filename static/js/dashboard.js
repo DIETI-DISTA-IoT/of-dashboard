@@ -313,17 +313,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => console.log(data));
   });
 
-  startMitigationButton.addEventListener("click", function() {
-      fetch("/start-mitigation", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startMitigationButton.addEventListener("click", function() {
+  //     fetch("/start-mitigation", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
   
-  stopMitigationButton.addEventListener("click", function() {
-      fetch("/stop-mitigation", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopMitigationButton.addEventListener("click", function() {
+  //     fetch("/stop-mitigation", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
   
 
 });

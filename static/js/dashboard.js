@@ -31,6 +31,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const stopAutomaticAttacksButton = document.getElementById("stop-automatic-attacks");
   const startAttackButtons = Array.from(document.querySelectorAll('[id$="_start_attack"]'));
   const stopAttackButtons = Array.from(document.querySelectorAll('[id$="_end_attack"]'))
+  const Bp_std_inputs = Array.from(document.querySelectorAll('[id$=".Bp_std"]'));
+  const Mp_std_inputs = Array.from(document.querySelectorAll('[id$=".Mp_std"]'));
+  const resetNoiseButtons = Array.from(document.querySelectorAll('[id$="_reset_noise"]'));
   const startPreconfAttackButton = document.getElementById("start-preconf-attack");
   const stopPreconfAttackButton = document.getElementById("stop-preconf-attack");
   const shutdownButton = document.getElementById("shutdown");
@@ -49,8 +52,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   function updateFlStrategyVisibility() {
     const strategy = flStrategySelect.value;
-    flYogiParams.style.display = strategy === 'fedyogi'  ? 'block' : 'none';
-    flProxParams.style.display = strategy === 'fedprox'  ? 'block' : 'none';
+    flYogiParams.style.display = strategy === 'fedyogi' ? 'block' : 'none';
+    flProxParams.style.display = strategy === 'fedprox' ? 'block' : 'none';
   }
 
   flStrategySelect.addEventListener('change', updateFlStrategyVisibility);
@@ -90,6 +93,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
   updateConfigDict();
+
+  function loadStdValuesOnVehicles(){
+    for (let i = 0; i < Bp_std_inputs.length; i++) {
+      vehicle_name = Bp_std_inputs[i].id.split('.')[0];
+      Bp_std_inputs[i].value = config['vehicles'][i]['Bp_std'];
+      Mp_std_inputs[i].value = config['vehicles'][i]['Mp_std'];
+    }
+  }
 
 
   configForm.addEventListener("submit", function(e) {
@@ -183,35 +194,35 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => console.log(data));
   });
 
-  startSecurityManagerButton.addEventListener("click", function() {
-      fetch("/start-security-manager", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(config)
-      })
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startSecurityManagerButton.addEventListener("click", function() {
+  //     fetch("/start-security-manager", {
+  //       method: "POST",
+  //       headers: {
+  //           'Content-Type': 'application/json'
+  //       },
+  //       body: JSON.stringify(config)
+  //     })
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  stopSecurityManagerButton.addEventListener("click", function() {
-      fetch("/stop-security-manager", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopSecurityManagerButton.addEventListener("click", function() {
+  //     fetch("/stop-security-manager", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  startPreconfAttackButton.addEventListener("click", function() {
-      fetch("/start-preconf-attack", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startPreconfAttackButton.addEventListener("click", function() {
+  //     fetch("/start-preconf-attack", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
-  stopPreconfAttackButton.addEventListener("click", function() {
-      fetch("/stop-preconf-attack", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopPreconfAttackButton.addEventListener("click", function() {
+  //     fetch("/stop-preconf-attack", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
 
   startAttackButtons.forEach(button => {
       button.addEventListener("click", function() {
@@ -226,6 +237,25 @@ window.addEventListener('DOMContentLoaded', (event) => {
           .then(data => console.log(data));
       });
   });
+
+
+  resetNoiseButtons.forEach(button => {
+      button.addEventListener("click", function() {
+          fetch("/reset-noise", {
+              method: "POST",
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                vehicle_name: button.id,
+                Mp_std: document.getElementById(`${button.id.split('_')[0]}.Mp_std`).value,
+                Bp_std: document.getElementById(`${button.id.split('_')[0]}.Bp_std`).value
+              })
+          })
+          .then(response => response.text())
+          .then(data => console.log(data));
+      });
+  })
 
 
   
@@ -297,17 +327,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
         .then(data => console.log(data));
   });
 
-  startMitigationButton.addEventListener("click", function() {
-      fetch("/start-mitigation", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // startMitigationButton.addEventListener("click", function() {
+  //     fetch("/start-mitigation", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
   
-  stopMitigationButton.addEventListener("click", function() {
-      fetch("/stop-mitigation", {method: "POST"})
-        .then(response => response.text())
-        .then(data => console.log(data));
-  });
+  // stopMitigationButton.addEventListener("click", function() {
+  //     fetch("/stop-mitigation", {method: "POST"})
+  //       .then(response => response.text())
+  //       .then(data => console.log(data));
+  // });
   
 
 });

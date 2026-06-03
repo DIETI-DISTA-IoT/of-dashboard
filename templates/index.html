@@ -19,8 +19,6 @@
                 <nav>
                     <button id="start-experiment">Start full experiment</button>
                     <button id="shutdown" class="stop">Shutdown all</button>
-                    <button id="start-mitigation">Start mitigation</button>
-                    <button id="stop-mitigation" class="stop">Stop mitigation</button>
                 </nav>
                 <nav>
                     <button id="create-vehicles">Create vehicles</button>
@@ -43,10 +41,6 @@
                     <button id="start-federated-learning">Start Federated Learning</button>
                     <button id="stop-federated-learning" class="stop">Stop Federated Learning</button>
                 </nav>
-                <nav>
-                    <button id="start-security-manager">Start Security Manager</button>
-                    <button id="stop-security-manager" class="stop">Stop Security Manager</button>
-                </nav>
             </div>
         
             <div class="containerForGroup">
@@ -55,14 +49,17 @@
                     <button id="start-automatic-attacks">Start Automatic Attacks</button>
                     <button id="stop-automatic-attacks" class="stop">Stop Automatic Attacks</button>
                 </nav>
-                <nav>
-                    <button id="start-preconf-attack">Start Preconfigured Attack</button>
-                    <button id="stop-preconf-attack" class="stop">Stop Preconfigured Attack</button>
-                </nav>
                 {% for button in rendering_params.botmaster_buttons %}
                     <nav>
                         <button id="{{ button }}_start_attack">attack from {{ button }}</button>
                         <button id="{{ button }}_end_attack" class="stop">stop attacking from {{ button }}</button>
+                        {% if button in rendering_params %}
+                            <label>{{ button }} Mp_std: <input type="text" id="{{ button }}.Mp_std" value="{{ rendering_params[button]['Mp_std'] }}"></label>
+                            <label>{{ button }} Bp_std: <input type="text" id="{{ button }}.Bp_std" value="{{ rendering_params[button]['Bp_std'] }}"></label>
+                            <button id="{{ button }}_reset_noise">reset noise</button>
+                        {% else %}
+                            <p>No vehicle data for {{ button }}</p>
+                        {% endif %}
                     </nav>
                 {% endfor %}
             </div>
@@ -75,7 +72,7 @@
                 <button id="wandber_log" class="tablink" onclick="openTab(event, 'wandber-log')">WANDBER LOG</button>
                 {% for button in rendering_params.botmaster_buttons %}
                     <button id="{{ button }}_producer_log" class="tablink" onclick="openTab(event, '{{ button }}_producer-log')">{{ button }} Producer logs</button>                    
-                    <button id="{{ button }}_consumer_log" class="tablink" onclick="openTab(event, '{{ button }}_consumer-log')">{{ button }} Consumer logs</button>                    
+                    <button id="{{ button }}_consumer_log" class="tablink" onclick="openTab(event, '{{ button }}_consumer-log')">{{ button }} Consumer logs</button>                  
                 {% endfor %}
             </div>
 
@@ -96,8 +93,8 @@
                     
                     <details>
                         <summary>WandB</summary>
-                        <label>Project Name: <input type="text" name="wandb.project_name" value="SEREWAY"></label>
-                        <label>Run Name: <input type="text" name="wandb.run_name" value="Some run"></label>
+                        <label>Project Name: <input type="text" name="wandb.project_name" value="SEREBench"></label>
+                        <label>Run Name: <input type="text" name="wandb.run_name" value="custom-bench"></label>
                         <label>Online: <input type="checkbox" name="wandb.online" checked></label>
                         <label>Kafka Broker URL: <input type="text" name="wandb.kafka_broker_url" value="kafka:9092"></label>
                         <label>Kafka Consumer Group ID: <input type="text" name="wandb.kafka_consumer_group_id" value="wandber"></label>
@@ -136,7 +133,7 @@
                                 <option value="normal">normal</option>
                             </select>
                         </label>
-                        <label>Aggregation Interval (s): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
+                        <label>Aggregation Interval (in seconds): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
                         <label>Weights Buffer Size: <input type="text" name="federated_learning.weights_buffer_size" value="5"></label>
 
                         <!-- FedYogi-specific params (shown only when fedyogi is selected) -->

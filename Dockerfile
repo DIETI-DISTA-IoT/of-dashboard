@@ -1,22 +1,14 @@
-# Use a base image of Python (Alpine version for a smaller size)
-# Alpine is chosen for its lightweight nature, which reduces the overall image size.
+# Use a base image of Python
 FROM python:3.10-slim
 
-
 # Set environment variables for Flask
-# FLASK_APP: Specifies the main application file to run when Flask starts.
-# FLASK_RUN_HOST: Configures Flask to listen on all network interfaces, allowing external access.
-# FLASK_RUN_PORT: Defines the port number on which Flask will listen for incoming requests.
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5000
 
 # Set additional environment variables for Kafka connection
-# KAFKA_BROKER: Address of the Kafka broker.
-# TOPIC_NAME: The name of the Kafka topic that the consumer will listen to.
 ENV KAFKA_BROKER="kafka:9092"
 ENV TOPIC_NAME="train-sensor-data"
-#ENV VEHICLE_NAME="e700_4801"
 
 # Install system dependencies including Docker CLI
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -33,29 +25,28 @@ RUN echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.g
 RUN apt-get update && apt-get install -y docker-ce-cli && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip to the latest version
-# Ensures that the latest packages and features are available.
 RUN pip install --no-cache-dir --upgrade pip
 
+# Full rebuild bust: pass CACHE_BUST=<timestamp> to re-run pip install AND code clone.
+# Used by:  make build-dashboard-scache
 ARG CACHE_BUST=1
 
-# Copy all project files into the working directory of the container
-# This includes Python scripts, Flask configuration, and any additional resources needed by the application.
-# Copy only the dashboard code into its workdir
+# Install dependencies from the build context (submodule checkout on disk).
+# This layer is cached when using scache-nolib; re-run only when using scache.
+COPY dashboard/requirements.txt /tmp/requirements.txt
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
+
+# Code-only bust: pass CODE_BUST=<timestamp> to re-run only the git clones, keeping pip cached.
+# Used by:  make build-dashboard-scache-nolib
+ARG CODE_BUST=1
+
 RUN git clone --branch sereBench https://github.com/DIETI-DISTA-IoT/of-dashboard /app
 
 WORKDIR /app
 
-# Also add the OpenFAIR package
 RUN git clone --branch sereBench https://github.com/DIETI-DISTA-IoT/of-core OpenFAIR/
 # NOTE: config/ will be provided at runtime via a bind-mount (see docker-compose.yml)
 
-# Install the dependencies specified in the requirements file
-# The requirements file should list all Python packages needed for the Flask app and Kafka consumer.
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expose port 5000 to allow external access to the Flask app
-# This makes the port accessible outside the container.
 EXPOSE 5000
 
-# Command to start the application when the container runs
 CMD ["python", "app.py"]

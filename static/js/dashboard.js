@@ -45,6 +45,20 @@ window.addEventListener('DOMContentLoaded', (event) => {
   const lastTimeDict = {};
   logtabs.forEach(tab => lastTimeDict[tab.id] = 0);
 
+  // FL strategy conditional sections
+  const flStrategySelect = document.getElementById('fl-strategy');
+  const flYogiParams = document.getElementById('fl-yogi-params');
+  const flProxParams = document.getElementById('fl-prox-params');
+
+  function updateFlStrategyVisibility() {
+    const strategy = flStrategySelect.value;
+    flYogiParams.style.display = strategy === 'fedyogi' ? 'block' : 'none';
+    flProxParams.style.display = strategy === 'fedprox' ? 'block' : 'none';
+  }
+
+  flStrategySelect.addEventListener('change', updateFlStrategyVisibility);
+  updateFlStrategyVisibility();
+
   var config = {};
 
   function updateConfigDict() {

@@ -205,17 +205,15 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/start-wandb', methods=['POST'])
     def start_wandb():
-        init_wandb_config = init_config['wandb']
         config_from_frontend = request.get_json(force=True)
-        fronend_wandb_config = config_from_frontend['wandb']
-        wandb_config = OmegaConf.to_container(OmegaConf.merge(init_wandb_config, fronend_wandb_config))
+        config = OmegaConf.to_container(OmegaConf.merge(init_config, config_from_frontend))
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
         response = requests.post(
                         url, 
                         json={
                             "command": "start_wandb",
-                            "params": wandb_config
+                            "params": config
                             }
                     )
         return response.json()

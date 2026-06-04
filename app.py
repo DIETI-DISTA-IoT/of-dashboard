@@ -271,7 +271,8 @@ def create_app(cfg: DictConfig) -> None:
                         json={
                             "command": "stop_wandb",
                             "params": {}
-                            }
+                            },
+                        timeout=15
                     )
         return response.json()
 
@@ -351,7 +352,10 @@ def create_app(cfg: DictConfig) -> None:
         time.sleep(2)
         container_manager.stop_automatic_attacks()
         time.sleep(2)
-        stop_wandb()
+        try:
+            stop_wandb()
+        except Exception as e:
+            app.logger.warning(f"stop_wandb failed during shutdown (non-fatal): {e}")
         time.sleep(4)
         return 'CAN SHUTDOWN NOW...', 200
     
@@ -378,7 +382,5 @@ def create_app(cfg: DictConfig) -> None:
 
 
 
-
 if __name__ == "__main__":
     create_app()
-    

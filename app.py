@@ -342,15 +342,13 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/shutdown', methods=['POST'])
     def shutdown():
-        stop_security_manager()
+        container_manager.stop_automatic_attacks()
         time.sleep(2)
         container_manager.stop_federated_learning()
         time.sleep(2)
         container_manager.stop_consuming_all()
         time.sleep(2)
         container_manager.stop_producing_all()
-        time.sleep(2)
-        container_manager.stop_automatic_attacks()
         time.sleep(2)
         try:
             stop_wandb()

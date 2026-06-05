@@ -276,13 +276,16 @@ def create_app(cfg: DictConfig) -> None:
     def stop_wandb():
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
+        # wandber now runs wandb.finish() synchronously with up to a 120 s
+        # internal timeout, so we need enough headroom here.  150 s gives a
+        # 30 s buffer on top of wandber's own limit.
         response = requests.post(
                         url, 
                         json={
                             "command": "stop_wandb",
                             "params": {}
                             },
-                        timeout=15
+                        timeout=150
                     )
         return response.json()
 
@@ -360,11 +363,13 @@ def create_app(cfg: DictConfig) -> None:
         time.sleep(2)
         container_manager.stop_producing_all()
         time.sleep(2)
+        # stop_wandb() is now fully synchronous on the wandber side — it
+        # blocks until wandb.finish() completes (or times out at 120 s).
+        # The call itself has a 150 s HTTP timeout so we never get stuck.
         try:
             stop_wandb()
         except Exception as e:
             app.logger.warning(f"stop_wandb failed during shutdown (non-fatal): {e}")
-        time.sleep(4)
         return 'CAN SHUTDOWN NOW...', 200
     
 

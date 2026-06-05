@@ -175,16 +175,26 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route("/produce-all", methods=["POST"])
     def produce_all():
+        payload = request.get_json(silent=True) or {}
+        if "default_vehicle_config" in payload and "vehicles" in payload:
+            container_manager.producer_manager.update_vehicle_configs(
+                payload["default_vehicle_config"], payload["vehicles"]
+            )
         return container_manager.produce_all()
-    
+
 
     @app.route("/stop-producing-all", methods=["POST"])
     def stop_produce_all():
         return container_manager.stop_producing_all()
-    
+
 
     @app.route("/consume-all", methods=["POST"])
     def consume_all():
+        payload = request.get_json(silent=True) or {}
+        if "default_consumer_config" in payload and "vehicles" in payload:
+            container_manager.consumer_manager.update_consumer_configs(
+                payload["default_consumer_config"], payload["vehicles"]
+            )
         return container_manager.consume_all()
     
 
@@ -377,7 +387,6 @@ def create_app(cfg: DictConfig) -> None:
     # Run the Flask app
     app.run(host=cfg.dashboard.host, port=cfg.dashboard.port)   
     
-
 
 
 if __name__ == "__main__":

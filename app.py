@@ -368,14 +368,15 @@ def create_app(cfg: DictConfig) -> None:
         # The call itself has a 150 s HTTP timeout so we never get stuck.
         wandb_closed = True
         wandb_error: str | None = None
+        app.logger.info("Shutdown: stopping wandb run...")
         try:
             stop_wandb()
-            app.logger.info("Shutdown complete — wandb closed cleanly.")
+            app.logger.info("Shutdown: wandb run stopped cleanly.")
         except Exception as e:
             wandb_closed = False
             wandb_error = str(e)
             app.logger.warning(
-                f"Shutdown complete — wandb did NOT close cleanly (non-fatal): {e}"
+                f"Shutdown: wandb run did NOT stop cleanly (non-fatal): {e}"
             )
         return jsonify({
             "message": "CAN SHUTDOWN NOW...",

@@ -1,6 +1,6 @@
 from omegaconf import DictConfig, OmegaConf 
 import hydra
-from flask import Flask,  render_template, request, Response
+from flask import Flask, jsonify, render_template, request, Response
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -366,11 +366,23 @@ def create_app(cfg: DictConfig) -> None:
         # stop_wandb() is now fully synchronous on the wandber side — it
         # blocks until wandb.finish() completes (or times out at 120 s).
         # The call itself has a 150 s HTTP timeout so we never get stuck.
+        wandb_closed = True
+        wandb_error: str | None = None
+        app.logger.info("Shutdown: stopping wandb run...")
         try:
             stop_wandb()
+            app.logger.info("Shutdown: wandb run stopped cleanly.")
         except Exception as e:
-            app.logger.warning(f"stop_wandb failed during shutdown (non-fatal): {e}")
-        return 'CAN SHUTDOWN NOW...', 200
+            wandb_closed = False
+            wandb_error = str(e)
+            app.logger.warning(
+                f"Shutdown: wandb run did NOT stop cleanly (non-fatal): {e}"
+            )
+        return jsonify({
+            "message": "CAN SHUTDOWN NOW...",
+            "wandb_closed": wandb_closed,
+            "wandb_error": wandb_error,
+        }), 200
     
 
     @app.route('/logs/<container_name>')

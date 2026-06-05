@@ -276,11 +276,8 @@ def create_app(cfg: DictConfig) -> None:
     def stop_wandb():
         manager_ip = container_manager.containers_ips['wandber']
         url = f'http://{manager_ip}:5000/command'
-        # wandber now runs wandb.finish() synchronously with up to a 120 s
-        # internal timeout, so we need enough headroom here.  150 s gives a
-        # 30 s buffer on top of wandber's own limit.
         response = requests.post(
-                        url, 
+                        url,
                         json={
                             "command": "stop_wandb",
                             "params": {}

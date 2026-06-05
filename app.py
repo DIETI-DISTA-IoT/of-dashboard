@@ -280,31 +280,13 @@ def create_app(cfg: DictConfig) -> None:
         # internal timeout, so we need enough headroom here.  150 s gives a
         # 30 s buffer on top of wandber's own limit.
         response = requests.post(
-                        url,
+                        url, 
                         json={
                             "command": "stop_wandb",
                             "params": {}
                             },
                         timeout=150
                     )
-        return response.json()
-
-    def _stop_wandber_consumer():
-        """Stop the wandber Kafka consumer without closing the wandb run.
-
-        Must be called BEFORE stop_federated_learning so that only one
-        rdkafka consumer is active during FL teardown. Running two
-        confluent-kafka consumers concurrently in the same process while
-        one of them calls consumer.close() triggers librdkafka heap
-        corruption ('malloc(): unsorted double linked list corrupted').
-        """
-        manager_ip = container_manager.containers_ips['wandber']
-        url = f'http://{manager_ip}:5000/command'
-        response = requests.post(
-            url,
-            json={"command": "stop_wandber_consumer", "params": {}},
-            timeout=30,
-        )
         return response.json()
 
     @app.route('/real-all-data')
@@ -375,18 +357,6 @@ def create_app(cfg: DictConfig) -> None:
     def shutdown():
         container_manager.stop_automatic_attacks()
         time.sleep(2)
-        # Stop the wandber Kafka consumer BEFORE stopping FL.
-        # Both the wandber consumer and the FL consumer are rdkafka instances
-        # in the same process. Calling consumer.close() on one while the other
-        # is still polling corrupts librdkafka's internal heap structures.
-        # Draining the wandber consumer first leaves only the FL consumer alive
-        # during FL teardown, eliminating the concurrent-close race.
-        app.logger.info("Shutdown: stopping wandber Kafka consumer (before FL teardown)...")
-        try:
-            _stop_wandber_consumer()
-            app.logger.info("Shutdown: wandber Kafka consumer stopped.")
-        except Exception as e:
-            app.logger.warning(f"Shutdown: could not stop wandber Kafka consumer (non-fatal): {e}")
         container_manager.stop_federated_learning()
         time.sleep(2)
         container_manager.stop_consuming_all()

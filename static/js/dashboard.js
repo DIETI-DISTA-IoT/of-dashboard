@@ -5,8 +5,11 @@ function openTab(evt, tabId) {
       // Remove 'active' class from all tab buttons
       document.querySelectorAll(".tablink").forEach(btn => btn.classList.remove("active"));
 
-      // Show the selected tab
-      document.getElementById(tabId).style.display = "block";
+      // Show the selected tab. Log/config tabs use a flex column layout so their
+      // content (e.g. the log box) can stretch to fill the available height;
+      // the config form keeps its natural block flow.
+      const tabEl = document.getElementById(tabId);
+      tabEl.style.display = tabEl.querySelector(".log-box") ? "flex" : "block";
 
       // Mark the clicked button as active
       evt.currentTarget.classList.add("active");

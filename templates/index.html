@@ -1,190 +1,190 @@
-&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
-&lt;head&gt;
-    &lt;meta charset="UTF-8"&gt;
-    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
-    &lt;link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"&gt;
-    &lt;script src="{{ url_for('static', filename='/js/dashboard.js') }}"&gt;&lt;/script&gt;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='/js/dashboard.js') }}"></script>
     
-    &lt;title&gt;Open-FAIR&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
+    <title>Open-FAIR</title>
+</head>
+<body>
     
-    &lt;div class="main-container"&gt;
+    <div class="main-container">
 
-        &lt;div class="sidebar"&gt;
-            &lt;h1&gt;Open-FAIR&lt;/h1&gt;
-            &lt;div class="containerForGroup"&gt;
-                &lt;h2&gt;Train Manager&lt;/h2&gt;
-                &lt;nav&gt;
-                    &lt;button id="start-experiment"&gt;Start full experiment&lt;/button&gt;
-                    &lt;button id="shutdown" class="stop"&gt;Shutdown all&lt;/button&gt;
-                &lt;/nav&gt;
-                &lt;nav&gt;
-                    &lt;button id="create-vehicles"&gt;Create vehicles&lt;/button&gt;
-                    &lt;button id="delete-vehicles" class="stop"&gt;Delete vehicles&lt;/button&gt;
-                &lt;/nav&gt;
-                &lt;nav&gt;
-                    &lt;button id="start-wandb"&gt;Start wandb&lt;/button&gt;
-                    &lt;button id="stop-wandb" class="stop"&gt;Stop wandb&lt;/button&gt;
-                &lt;/nav&gt;
-                &lt;nav&gt;
-                    &lt;button id="produce-all"&gt;Start producers&lt;/button&gt;
-                    &lt;button id="stop-producing-all" class="stop"&gt;Stop all producers&lt;/button&gt;
-                &lt;/nav&gt;
-                &lt;nav&gt;
-                    &lt;button id="consume-all"&gt;Start consumers&lt;/button&gt;
-                    &lt;button id="stop-consuming-all" class="stop"&gt;Stop all consumers&lt;/button&gt;
+        <div class="sidebar">
+            <h1>Open-FAIR</h1>
+            <div class="containerForGroup">
+                <h2>Train Manager</h2>
+                <nav>
+                    <button id="start-experiment">Start full experiment</button>
+                    <button id="shutdown" class="stop">Shutdown all</button>
+                </nav>
+                <nav>
+                    <button id="create-vehicles">Create vehicles</button>
+                    <button id="delete-vehicles" class="stop">Delete vehicles</button>
+                </nav>
+                <nav>
+                    <button id="start-wandb">Start wandb</button>
+                    <button id="stop-wandb" class="stop">Stop wandb</button>
+                </nav>
+                <nav>
+                    <button id="produce-all">Start producers</button>
+                    <button id="stop-producing-all" class="stop">Stop all producers</button>
+                </nav>
+                <nav>
+                    <button id="consume-all">Start consumers</button>
+                    <button id="stop-consuming-all" class="stop">Stop all consumers</button>
 
-                &lt;/nav&gt;
-                &lt;nav&gt;
-                    &lt;button id="start-federated-learning"&gt;Start Federated Learning&lt;/button&gt;
-                    &lt;button id="stop-federated-learning" class="stop"&gt;Stop Federated Learning&lt;/button&gt;
-                &lt;/nav&gt;
-            &lt;/div&gt;
+                </nav>
+                <nav>
+                    <button id="start-federated-learning">Start Federated Learning</button>
+                    <button id="stop-federated-learning" class="stop">Stop Federated Learning</button>
+                </nav>
+            </div>
         
-            &lt;div class="containerForGroup"&gt;
-                &lt;h2&gt;Bot Master&lt;/h2&gt;
-                &lt;nav&gt;
-                    &lt;button id="start-automatic-attacks"&gt;Start Automatic Attacks&lt;/button&gt;
-                    &lt;button id="stop-automatic-attacks" class="stop"&gt;Stop Automatic Attacks&lt;/button&gt;
-                &lt;/nav&gt;
+            <div class="containerForGroup">
+                <h2>Bot Master</h2>
+                <nav>
+                    <button id="start-automatic-attacks">Start Automatic Attacks</button>
+                    <button id="stop-automatic-attacks" class="stop">Stop Automatic Attacks</button>
+                </nav>
                 {% for button in rendering_params.botmaster_buttons %}
-                    &lt;nav&gt;
-                        &lt;button id="{{ button }}_start_attack"&gt;attack from {{ button }}&lt;/button&gt;
-                        &lt;button id="{{ button }}_end_attack" class="stop"&gt;stop attacking from {{ button }}&lt;/button&gt;
+                    <nav>
+                        <button id="{{ button }}_start_attack">attack from {{ button }}</button>
+                        <button id="{{ button }}_end_attack" class="stop">stop attacking from {{ button }}</button>
                         {% if button in rendering_params %}
-                            &lt;label&gt;{{ button }} Mp_std: &lt;input type="text" id="{{ button }}.Mp_std" value="{{ rendering_params[button]['Mp_std'] }}"&gt;&lt;/label&gt;
-                            &lt;label&gt;{{ button }} Bp_std: &lt;input type="text" id="{{ button }}.Bp_std" value="{{ rendering_params[button]['Bp_std'] }}"&gt;&lt;/label&gt;
-                            &lt;button id="{{ button }}_reset_noise"&gt;reset noise&lt;/button&gt;
+                            <label>{{ button }} Mp_std: <input type="text" id="{{ button }}.Mp_std" value="{{ rendering_params[button]['Mp_std'] }}"></label>
+                            <label>{{ button }} Bp_std: <input type="text" id="{{ button }}.Bp_std" value="{{ rendering_params[button]['Bp_std'] }}"></label>
+                            <button id="{{ button }}_reset_noise">reset noise</button>
                         {% else %}
-                            &lt;p&gt;No vehicle data for {{ button }}&lt;/p&gt;
+                            <p>No vehicle data for {{ button }}</p>
                         {% endif %}
-                    &lt;/nav&gt;
+                    </nav>
                 {% endfor %}
-            &lt;/div&gt;
-        &lt;/div&gt;
+            </div>
+        </div>
 
-        &lt;div class="content"&gt;
-            &lt;div class="tabs"&gt;
-                &lt;button class="tablink active" onclick="openTab(event, 'config')"&gt;CONFIGURATION&lt;/button&gt;
-                &lt;button id="dashboard_log" class="tablink" onclick="openTab(event, 'dashboard-log')"&gt;DASH LOG&lt;/button&gt;
-                &lt;button id="wandber_log" class="tablink" onclick="openTab(event, 'wandber-log')"&gt;WANDBER LOG&lt;/button&gt;
-                &lt;button id="fedlearningmanager_log" class="tablink" onclick="openTab(event, 'fedlearningmanager-log')"&gt;FED LEARNING MANAGER LOG&lt;/button&gt;
+        <div class="content">
+            <div class="tabs">
+                <button class="tablink active" onclick="openTab(event, 'config')">CONFIGURATION</button>
+                <button id="dashboard_log" class="tablink" onclick="openTab(event, 'dashboard-log')">DASH LOG</button>
+                <button id="wandber_log" class="tablink" onclick="openTab(event, 'wandber-log')">WANDBER LOG</button>
+                <button id="fedlearningmanager_log" class="tablink" onclick="openTab(event, 'fedlearningmanager-log')">FED LEARNING MANAGER LOG</button>
                 {% for button in rendering_params.botmaster_buttons %}
-                    &lt;button id="{{ button }}_producer_log" class="tablink" onclick="openTab(event, '{{ button }}_producer-log')"&gt;{{ button }} Producer logs&lt;/button&gt;                    
-                    &lt;button id="{{ button }}_consumer_log" class="tablink" onclick="openTab(event, '{{ button }}_consumer-log')"&gt;{{ button }} Consumer logs&lt;/button&gt;                  
+                    <button id="{{ button }}_producer_log" class="tablink" onclick="openTab(event, '{{ button }}_producer-log')">{{ button }} Producer logs</button>                    
+                    <button id="{{ button }}_consumer_log" class="tablink" onclick="openTab(event, '{{ button }}_consumer-log')">{{ button }} Consumer logs</button>                  
                 {% endfor %}
-            &lt;/div&gt;
+            </div>
 
-            &lt;div id="config" class="tabcontent" style="display:block;"&gt;
-                &lt;form id="config-form"&gt;
-                    &lt;h2&gt;Configuration&lt;/h2&gt;
+            <div id="config" class="tabcontent" style="display:block;">
+                <form id="config-form">
+                    <h2>Configuration</h2>
 
-                    &lt;!-- Simple top-level fields --&gt;
-                    &lt;label&gt;Log Level:
-                        &lt;select name="logging_level"&gt;
-                        &lt;option value="info" selected&gt;info&lt;/option&gt;
-                        &lt;option value="debug"&gt;debug&lt;/option&gt;
-                        &lt;option value="warn"&gt;warn&lt;/option&gt;
-                        &lt;option value="error"&gt;error&lt;/option&gt;
-                        &lt;/select&gt;
-                    &lt;/label&gt;
-                    &lt;label&gt;Kafka Topic Update Interval: &lt;input type="text" name="wandb.kafka_topic_update_interval" value="30"&gt;&lt;/label&gt;
+                    <!-- Simple top-level fields -->
+                    <label>Log Level:
+                        <select name="logging_level">
+                        <option value="info" selected>info</option>
+                        <option value="debug">debug</option>
+                        <option value="warn">warn</option>
+                        <option value="error">error</option>
+                        </select>
+                    </label>
+                    <label>Kafka Topic Update Interval: <input type="text" name="wandb.kafka_topic_update_interval" value="30"></label>
                     
-                    &lt;details&gt;
-                        &lt;summary&gt;WandB&lt;/summary&gt;
-                        &lt;label&gt;Project Name: &lt;input type="text" name="wandb.project_name" value="SEREBench"&gt;&lt;/label&gt;
-                        &lt;label&gt;Run Name: &lt;input type="text" name="wandb.run_name" value="custom-bench"&gt;&lt;/label&gt;
-                        &lt;label&gt;Online: &lt;input type="checkbox" name="wandb.online" checked&gt;&lt;/label&gt;
-                        &lt;label&gt;Kafka Broker URL: &lt;input type="text" name="wandb.kafka_broker_url" value="kafka:9092"&gt;&lt;/label&gt;
-                        &lt;label&gt;Kafka Consumer Group ID: &lt;input type="text" name="wandb.kafka_consumer_group_id" value="wandber"&gt;&lt;/label&gt;
-                        &lt;label&gt;Kafka Auto Offset Reset: &lt;input type="text" name="wandb.kafka_auto_offset_reset" value="earliest"&gt;&lt;/label&gt;
+                    <details>
+                        <summary>WandB</summary>
+                        <label>Project Name: <input type="text" name="wandb.project_name" value="SEREBench"></label>
+                        <label>Run Name: <input type="text" name="wandb.run_name" value="custom-bench"></label>
+                        <label>Online: <input type="checkbox" name="wandb.online" checked></label>
+                        <label>Kafka Broker URL: <input type="text" name="wandb.kafka_broker_url" value="kafka:9092"></label>
+                        <label>Kafka Consumer Group ID: <input type="text" name="wandb.kafka_consumer_group_id" value="wandber"></label>
+                        <label>Kafka Auto Offset Reset: <input type="text" name="wandb.kafka_auto_offset_reset" value="earliest"></label>
                         
-                    &lt;/details&gt;
+                    </details>
 
-                    &lt;details&gt;
-                        &lt;summary&gt;Security Manager&lt;/summary&gt;
-                        &lt;label&gt;Buffer Size: &lt;input type="text" name="security_manager.buffer_size" value="10000"&gt;&lt;/label&gt;
-                        &lt;label&gt;Batch Size: &lt;input type="text" name="security_manager.batch_size" value="32"&gt;&lt;/label&gt;
-                        &lt;label&gt;Learning Rate: &lt;input type="text" name="security_manager.learning_rate" value="0.001"&gt;&lt;/label&gt;
-                        &lt;label&gt;Epoch Size: &lt;input type="text" name="security_manager.epoch_size" value="50"&gt;&lt;/label&gt;
-                        &lt;label&gt;Save model frequency (in epochs): &lt;input type="text" name="security_manager.save_model_freq_epochs" value="5"&gt;&lt;/label&gt;
-                        &lt;label&gt;Model Saving Path: &lt;input type="text" name="security_manager.model_saving_path" value="sm_model.pth"&gt;&lt;/label&gt;&lt;/label&gt;
-                        &lt;label&gt;Training Frequency (in seconds): &lt;input type="text" name="security_manager.training_freq_seconds" value="10"&gt;&lt;/label&gt;
-                        &lt;label&gt;Initialisation Strategy: &lt;input type="text" name="security_manager.initialization_strategy" value="xavier"&gt;&lt;/label&gt;&lt;/label&gt;
-                    &lt;/details&gt;
+                    <details>
+                        <summary>Security Manager</summary>
+                        <label>Buffer Size: <input type="text" name="security_manager.buffer_size" value="10000"></label>
+                        <label>Batch Size: <input type="text" name="security_manager.batch_size" value="32"></label>
+                        <label>Learning Rate: <input type="text" name="security_manager.learning_rate" value="0.001"></label>
+                        <label>Epoch Size: <input type="text" name="security_manager.epoch_size" value="50"></label>
+                        <label>Save model frequency (in epochs): <input type="text" name="security_manager.save_model_freq_epochs" value="5"></label>
+                        <label>Model Saving Path: <input type="text" name="security_manager.model_saving_path" value="sm_model.pth"></label></label>
+                        <label>Training Frequency (in seconds): <input type="text" name="security_manager.training_freq_seconds" value="10"></label>
+                        <label>Initialisation Strategy: <input type="text" name="security_manager.initialization_strategy" value="xavier"></label></label>
+                    </details>
 
 
-                    &lt;details&gt;
-                        &lt;summary&gt;Federated Learning&lt;/summary&gt;
+                    <details>
+                        <summary>Federated Learning</summary>
 
-                        &lt;label&gt;Aggregation Strategy:
-                            &lt;select name="federated_learning.aggregation_strategy" id="fl-strategy"&gt;
-                                &lt;option value="fedavg" selected&gt;FedAvg&lt;/option&gt;
-                                &lt;option value="fedyogi"&gt;FedYogi&lt;/option&gt;
-                                &lt;option value="fedmedian"&gt;FedMedian&lt;/option&gt;
-                                &lt;option value="fedprox"&gt;FedProx&lt;/option&gt;
-                            &lt;/select&gt;
-                        &lt;/label&gt;
-                        &lt;label&gt;Initialisation Strategy:
-                            &lt;select name="federated_learning.initialization_strategy"&gt;
-                                &lt;option value="xavier" selected&gt;xavier&lt;/option&gt;
-                                &lt;option value="he"&gt;he&lt;/option&gt;
-                                &lt;option value="normal"&gt;normal&lt;/option&gt;
-                            &lt;/select&gt;
-                        &lt;/label&gt;
-                        &lt;label&gt;Aggregation Interval (in seconds): &lt;input type="text" name="federated_learning.aggregation_interval_secs" value="30"&gt;&lt;/label&gt;
-                        &lt;label&gt;Weights Buffer Size: &lt;input type="text" name="federated_learning.weights_buffer_size" value="5"&gt;&lt;/label&gt;
+                        <label>Aggregation Strategy:
+                            <select name="federated_learning.aggregation_strategy" id="fl-strategy">
+                                <option value="fedavg" selected>FedAvg</option>
+                                <option value="fedyogi">FedYogi</option>
+                                <option value="fedmedian">FedMedian</option>
+                                <option value="fedprox">FedProx</option>
+                            </select>
+                        </label>
+                        <label>Initialisation Strategy:
+                            <select name="federated_learning.initialization_strategy">
+                                <option value="xavier" selected>xavier</option>
+                                <option value="he">he</option>
+                                <option value="normal">normal</option>
+                            </select>
+                        </label>
+                        <label>Aggregation Interval (in seconds): <input type="text" name="federated_learning.aggregation_interval_secs" value="30"></label>
+                        <label>Weights Buffer Size: <input type="text" name="federated_learning.weights_buffer_size" value="5"></label>
 
-                        &lt;!-- FedYogi-specific params (shown only when fedyogi is selected) --&gt;
-                        &lt;div id="fl-yogi-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;"&gt;
-                            &lt;p style="margin: 4px 0; font-size: 0.85em; color: #555;"&gt;FedYogi server-side optimizer parameters&lt;/p&gt;
-                            &lt;label&gt;Server Learning Rate: &lt;input type="text" name="federated_learning.learning_rate" value="0.01"&gt;&lt;/label&gt;
-                            &lt;label&gt;&amp;beta;&lt;sub&gt;1&lt;/sub&gt; (momentum): &lt;input type="text" name="federated_learning.yogi_beta1" value="0.9"&gt;&lt;/label&gt;
-                            &lt;label&gt;&amp;beta;&lt;sub&gt;2&lt;/sub&gt; (adaptive): &lt;input type="text" name="federated_learning.yogi_beta2" value="0.999"&gt;&lt;/label&gt;
-                            &lt;label&gt;&amp;epsilon; (stability): &lt;input type="text" name="federated_learning.yogi_epsilon" value="0.001"&gt;&lt;/label&gt;
-                        &lt;/div&gt;
+                        <!-- FedYogi-specific params (shown only when fedyogi is selected) -->
+                        <div id="fl-yogi-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;">
+                            <p style="margin: 4px 0; font-size: 0.85em; color: #555;">FedYogi server-side optimizer parameters</p>
+                            <label>Server Learning Rate: <input type="text" name="federated_learning.learning_rate" value="0.01"></label>
+                            <label>&beta;<sub>1</sub> (momentum): <input type="text" name="federated_learning.yogi_beta1" value="0.9"></label>
+                            <label>&beta;<sub>2</sub> (adaptive): <input type="text" name="federated_learning.yogi_beta2" value="0.999"></label>
+                            <label>&epsilon; (stability): <input type="text" name="federated_learning.yogi_epsilon" value="0.001"></label>
+                        </div>
 
-                        &lt;!-- FedProx-specific params (shown only when fedprox is selected) --&gt;
-                        &lt;div id="fl-prox-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;"&gt;
-                            &lt;p style="margin: 4px 0; font-size: 0.85em; color: #555;"&gt;FedProx client-side proximal regularisation&lt;/p&gt;
-                            &lt;label&gt;Proximal Coefficient &amp;mu;:
-                                &lt;input type="text" name="default_consumer_config.fedprox_mu" value="0.01"&gt;
-                            &lt;/label&gt;
-                        &lt;/div&gt;
+                        <!-- FedProx-specific params (shown only when fedprox is selected) -->
+                        <div id="fl-prox-params" style="display:none; border-left: 3px solid #aaa; padding-left: 10px; margin-top: 6px;">
+                            <p style="margin: 4px 0; font-size: 0.85em; color: #555;">FedProx client-side proximal regularisation</p>
+                            <label>Proximal Coefficient &mu;:
+                                <input type="text" name="default_consumer_config.fedprox_mu" value="0.01">
+                            </label>
+                        </div>
 
-                    &lt;/details&gt;
+                    </details>
                     
-                    &lt;button type="submit" class="blue"&gt;Save Config&lt;/button&gt;
+                    <button type="submit" class="blue">Save Config</button>
                     
-                &lt;/form&gt;
+                </form>
         
-            &lt;/div&gt;
-            &lt;div id="dashboard-log" class="tabcontent"&gt;
-                &lt;h2&gt;Dashboard Log&lt;/h2&gt;
-                &lt;div id="dashboard-log-box"  class="log-box"&gt;&lt;/div&gt;
-            &lt;/div&gt;
-            &lt;div id="wandber-log" class="tabcontent"&gt;
-                &lt;h2&gt;Wandber Log&lt;/h2&gt;
-                &lt;div id="wandber-log-box"  class="log-box"&gt;&lt;/div&gt;
-            &lt;/div&gt;
-            &lt;div id="fedlearningmanager-log" class="tabcontent"&gt;
-                &lt;h2&gt;Fed Learning Manager Log&lt;/h2&gt;
-                &lt;div id="fedlearningmanager-log-box"  class="log-box"&gt;&lt;/div&gt;
-            &lt;/div&gt;
+            </div>
+            <div id="dashboard-log" class="tabcontent">
+                <h2>Dashboard Log</h2>
+                <div id="dashboard-log-box"  class="log-box"></div>
+            </div>
+            <div id="wandber-log" class="tabcontent">
+                <h2>Wandber Log</h2>
+                <div id="wandber-log-box"  class="log-box"></div>
+            </div>
+            <div id="fedlearningmanager-log" class="tabcontent">
+                <h2>Fed Learning Manager Log</h2>
+                <div id="fedlearningmanager-log-box"  class="log-box"></div>
+            </div>
             {% for button in rendering_params.botmaster_buttons %}
-                &lt;div id="{{ button }}_consumer-log" class="tabcontent"&gt;
-                    &lt;h2&gt;{{ button }} Consumer Log&lt;/h2&gt;
-                    &lt;div id="{{ button }}_consumer-log-box"  class="log-box"&gt;&lt;/div&gt;
-                &lt;/div&gt;
-                &lt;div id="{{ button }}_producer-log" class="tabcontent"&gt;
-                    &lt;h2&gt;{{ button }} Producer Log&lt;/h2&gt;
-                    &lt;div id="{{ button }}_producer-log-box"  class="log-box"&gt;&lt;/div&gt;
-                &lt;/div&gt;
+                <div id="{{ button }}_consumer-log" class="tabcontent">
+                    <h2>{{ button }} Consumer Log</h2>
+                    <div id="{{ button }}_consumer-log-box"  class="log-box"></div>
+                </div>
+                <div id="{{ button }}_producer-log" class="tabcontent">
+                    <h2>{{ button }} Producer Log</h2>
+                    <div id="{{ button }}_producer-log-box"  class="log-box"></div>
+                </div>
             {% endfor %}
 
-    &lt;/div&gt;
+    </div>
 
-&lt;/body&gt;
-&lt;/html&gt;
+</body>
+</html>

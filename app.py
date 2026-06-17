@@ -195,6 +195,13 @@ def create_app(cfg: DictConfig) -> None:
             container_manager.consumer_manager.update_consumer_configs(
                 payload["default_consumer_config"], payload["vehicles"]
             )
+        # Propagate the runtime-selected architecture (anomaly_detection.model_type
+        # and shape params) so consumers build the right model instead of the
+        # dashboard's boot-time default.
+        if "anomaly_detection" in payload:
+            container_manager.apply_runtime_overrides(
+                {"anomaly_detection": payload["anomaly_detection"]}
+            )
         return container_manager.consume_all()
     
 
@@ -205,7 +212,11 @@ def create_app(cfg: DictConfig) -> None:
 
     @app.route('/start-federated-learning', methods=['POST'])
     def start_federated_learning():
-        return container_manager.start_federated_learning()
+        # The control plane (dash_cli / GUI) sends the runtime config in the body;
+        # forward it so the FL manager picks up the selected aggregation strategy
+        # and model architecture instead of the dashboard's boot config.
+        params = request.get_json(silent=True) or {}
+        return container_manager.start_federated_learning(params=params)
     
 
     @app.route('/stop-federated-learning', methods=['POST'])
